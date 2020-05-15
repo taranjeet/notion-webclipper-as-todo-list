@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title data-binding="todo">Notion Web Clipper as Todo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <meta name="theme-color" content="#121212">
+    <style>
+      body {
+        background-color: #121212;
+        line-height: 400%;
+      }
+      .container {
+        width: auto;
+        max-width: 680px;
+        padding: 0 15px;
+        text-anchor: center;
+      }
+
+      .footer {
+        background-color: #121212;
+      }
+      .main-heading {
+        color: #EFBB35;
+      }
+      .white-text {
+        color: white;
+      }
+      .footer-link {
+        color: white;
+        text-decoration: none;
+      }
+      .footer-link:hover {
+        text-decoration: underline;
+        color: white;
+      }
+  </style>
+</head>
+
+<body class="d-flex flex-column h-100 justify-content-center align-items-center">
+  <main role="main" class="flex-shrink-0">
+      <div class="container mt-5">
+          <div class="row d-flex justify-content-center align-items-center">
+              <div>
+                  <h1 class="mt-5 main-heading">Save Todos Instantly</h1>
+              </div>
+              <div class="white-text mt-5 text-center">
+                  <h4>Use Notion Web Clipper to store <br />your todos just like reading list </h4>
+              </div>
+          </div>
+          <div class="d-flex mt-5">
+              <textarea class="form-control" placeholder="write your todo here" id="todo" rows="10" data-model="todo"></textarea>
+          </div>
+      </div>
+  </main>
+  <footer class="footer mt-auto py-3">
+      <div class="container">
+          <span class="text-muted">Made by <a href="https://twitter.com/@taranjeet7114" class="footer-link">@taranjeet7114</a></span>
+      </div>
+      </div>
+  </footer>
+  <script type="text/javascript">
+  /*
+  2 way data binding in plain vanilla JS.
+  Credits: https://dev.to/phoinixi/two-way-data-binding-in-vanilla-js-poc-4e06
+  */
+
+  const createState = (state) => {
+      return new Proxy(state, {
+          set(target, property, value) {
+              target[property] = value; // default set behaviour
+              render(); // updates the view every time the state changes
+              return true;
+          }
+      });
+  };
+
+  const state = createState({
+      todo: ""
+  });
+
+  const listeners = document.querySelectorAll('[data-model]');
+
+  listeners.forEach((listener) => {
+      const name = listener.dataset.model;
+      listener.addEventListener('keyup', (event) => {
+          state[name] = listener.value;
+          console.log(state);
+      });
+  });
+  const render = () => {
+      const bindings = Array.from(document.querySelectorAll('[data-binding]')).map(
+          e => e.dataset.binding
+      );
+      bindings.forEach((binding) => {
+          document.querySelector(`[data-binding='${binding}']`).innerHTML = state[binding];
+          document.querySelector(`[data-model='${binding}']`).value = state[binding];
+      });
+  };
+
+  render();
+  </script>
+</body>
+</html>
